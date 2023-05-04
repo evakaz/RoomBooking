@@ -1,0 +1,15 @@
+﻿<Window x:Class="app.BookRoomWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Book Room" Height="300" Width="400"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <Grid>
+        <Label Content="Select a Room:" HorizontalAlignment="Left" Margin="30,30,0,0" VerticalAlignment="Top"/>
+        <ComboBox x:Name="roomComboBox" HorizontalAlignment="Left" Margin="30,60,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding AvailableRooms}" DisplayMemberPath="Number" SelectedValuePath="Id"/>
+
+        <Label Content="Select a Time Slot:" HorizontalAlignment="Left" Margin="30,100,0,0" VerticalAlignment="Top"/>
+
+        <Button Content="Book Room" HorizontalAlignment="Left" Margin="30,200,0,0" VerticalAlignment="Top" Width="120" Command="{Binding BookRoomCommand}" CommandParameter="{Binding ElementName=roomComboBox, Path=SelectedValue}"/>
+        <Button Content="Cancel" HorizontalAlignment="Left" Margin="180,200,0,0" VerticalAlignment="Top" Width="120" IsCancel="True"/>
+    </Grid>
+</Window>

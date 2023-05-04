@@ -1,25 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.SqlClient;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using app;
+
 
 namespace app
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        private string connectionString = "Server=vhk-12r.database.windows.net;Database=Hamburger;User Id=user2;Password=7GkpG5Us;";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -27,7 +16,42 @@ namespace app
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            string username = usernameTextBox.Text;
+            string password = passwordTextBox.Password;
 
+            string query = "SELECT * FROM dbo.Users WHERE Username = @Username AND Password = @Password;";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Username", username);
+                command.Parameters.AddWithValue("@Password", password);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.HasRows)
+                    {
+                        this.Close();
+                        BookRoomWindow window = new BookRoomWindow();
+                        window.Show();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid username or password.");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message);
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
         }
     }
 }
